@@ -13,9 +13,14 @@ export default function Register() {
 
   const handleRegister = async () => {
     try {
-      await register(email, password);
-      alert("Registration successful!");
+    const res =   await register(email, password);
+if(res)
+{
+  alert("Registration successful!");
       router.push("/login"); 
+    setError('')
+}
+    
     } catch (error) {
       console.error(error);
       setError("Failed to register. Please try again.");
@@ -31,6 +36,7 @@ export default function Register() {
           type="email"
           placeholder="Email"
           value={email}
+          style={{color:'black'}}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full px-3 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -38,6 +44,7 @@ export default function Register() {
           type="password"
           placeholder="Password"
           value={password}
+          style={{color:'black'}}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full px-3 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

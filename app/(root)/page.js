@@ -1,17 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useLayoutEffect} from "react";
 import { getAuth } from "firebase/auth";
 import { addDoc, collection, onSnapshot, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useRouter } from 'next/navigation'; 
 
 export default function Home() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [items, setItems] = useState([]);
+const [userdata,setuserdata]=useState(null)
+
   const auth = getAuth();
   const user = auth.currentUser;
-
+  const isLoggedIn = Boolean(auth.currentUser);
+  const router = useRouter();
+  useLayoutEffect(() => {
+    const getUser = () =>{  
+      if(auth.currentUser){
+        setuserdata(auth.currentUser)
+      }else{
+        setuserdata(null)
+      }
+  
+    }
+  
+    return () => {
+      getUser()
+    };
+  }, [auth])
   // Real-time listener to fetch items
   useEffect(() => {
     const itemsCollection = collection(db, "items");
@@ -23,10 +41,14 @@ export default function Home() {
     // Cleanup the listener on component unmount
     return () => unsubscribe();
   }, []);
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!isLoggedIn){
+      alert("Please login to create an item");
+      router.push('/login')
+      return;
+    }
     if (title && description) {
       try {
         await addDoc(collection(db, "items"), {
@@ -70,6 +92,7 @@ export default function Home() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{color:'black'}}
               required
             />
           </div>
@@ -80,6 +103,7 @@ export default function Home() {
             <textarea
               id="description"
               value={description}
+              style={{color:'black'}}
               onChange={(e) => setDescription(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required

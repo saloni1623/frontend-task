@@ -1,4 +1,5 @@
 import Navbar from "@/component/Navbar";
+import { getAuth } from "firebase/auth";
 
 export default function RootLayout({ children }) {
     return (
@@ -10,4 +11,4 @@ export default function RootLayout({ children }) {
      </main>
     );
   }
-  
+

@@ -1,28 +1,39 @@
-// app/AuthCheck.js
-"use client"; // This component is a client component
 
-import { useEffect } from "react";
+"use client"; // Client component to use Firebase Auth
+
+import { useEffect, createContext, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/lib/firebase";
 
+// Create a UserContext
+export const UserContext = createContext(null);
+
 const AuthCheck = ({ children }) => {
   const auth = getAuth(app);
   const router = useRouter();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Redirect to login if not authenticated
-        router.push("/login");
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+      } else {
+        localStorage.removeItem("user");
+        setUser(null);
+        // router.push("/login"); // Redirect to login if not authenticated
       }
     });
 
-    // Clean up the subscription on unmount
     return () => unsubscribe();
   }, [auth, router]);
 
-  return <>{children}</>; // Render children components
+  return (
+    <UserContext.Provider value={user}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export default AuthCheck;

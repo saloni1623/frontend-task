@@ -31,12 +31,14 @@ export default function Login() {
           type="email"
           placeholder="Email"
           value={email}
+          style={{color:'black'}}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full px-3 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="password"
           placeholder="Password"
+          style={{color:'black'}}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full px-3 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

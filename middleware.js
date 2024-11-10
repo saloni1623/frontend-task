@@ -6,7 +6,7 @@ import { app } from "./lib/firebase"; // Ensure firebase is initialized
 export async function middleware(req) {
   const auth = getAuth(app);
   const currentUser = auth.currentUser;
-
+ 
   // Check if the user is authenticated; if not, redirect to the login page.
   if (!currentUser && req.nextUrl.pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", req.url));
