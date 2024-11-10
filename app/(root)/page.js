@@ -4,6 +4,7 @@ import { useEffect, useState ,useLayoutEffect} from "react";
 import { getAuth } from "firebase/auth";
 import { addDoc, collection, onSnapshot, serverTimestamp, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useRouter } from 'next/navigation'; 
 
 export default function Home() {
   const [title, setTitle] = useState("");
@@ -14,7 +15,7 @@ const [userdata,setuserdata]=useState(null)
   const auth = getAuth();
   const user = auth.currentUser;
   const isLoggedIn = Boolean(auth.currentUser);
-
+  const router = useRouter();
   useLayoutEffect(() => {
     const getUser = () =>{  
       if(auth.currentUser){
@@ -45,6 +46,7 @@ const [userdata,setuserdata]=useState(null)
     e.preventDefault();
     if(!isLoggedIn){
       alert("Please login to create an item");
+      router.push('/login')
       return;
     }
     if (title && description) {
@@ -90,6 +92,7 @@ const [userdata,setuserdata]=useState(null)
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{color:'black'}}
               required
             />
           </div>
@@ -100,6 +103,7 @@ const [userdata,setuserdata]=useState(null)
             <textarea
               id="description"
               value={description}
+              style={{color:'black'}}
               onChange={(e) => setDescription(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
